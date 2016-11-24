@@ -135,23 +135,21 @@ public class MainActivity extends AppCompatActivity {
  //       ImageUrlLoadThread obj=new ImageUrlLoadThread();
   //      Bitmap[] bitmap1=obj.loadImageMethod();
 
-        File textfile=new File(Environment.getExternalStorageDirectory()+File.separator+"images"+File.separator+"urlfile.txt");
+        File textfile=new File(Environment.getExternalStorageDirectory()+File.separator+"images");
        // File textfile=new File("/sdcard/doc/urlfile.txt");
         if(!textfile.exists())
             textfile.mkdirs();
-        try
-        {
-            if(!textfile.exists())
-                textfile.createNewFile();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        File f = new File(file, "Myurls.txt");
+        if (!f.exists())
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         FileWriter fw= null;
         try
         {
-            fw = new FileWriter(textfile);
+            fw = new FileWriter(f);
         }
         catch (IOException e)
         {
@@ -208,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         String str=null;
         try
         {
-            FileReader file1=new FileReader(textfile);
+            FileReader file1=new FileReader(f);
             BufferedReader bf=new BufferedReader(file1);
 
             str=bf.readLine();
@@ -225,13 +223,13 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(),String.valueOf("i2"+i2),Toast.LENGTH_LONG).show();
 //            Toast.makeText(getApplicationContext(),String.valueOf("mul"+mul),Toast.LENGTH_LONG).show();
 
-            FileReader file2 = new FileReader(textfile);
+            FileReader file2 = new FileReader(f);
             BufferedReader bf2 = new BufferedReader(file2);
             String str3=null;
             int linenumber=0;
             if(file.exists())
             {
-                while((str3=bf2.readLine())!=null)
+                while((bf2.readLine())!=null)
                 {
                     linenumber++;
                 }
@@ -253,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 int i = 0;
                 String[] URL1 = new String[linenumber];
 
-                file2 = new FileReader(textfile);
+                file2 = new FileReader(f);
                 bf2 = new BufferedReader(file2);
 
                 while ((str2 = bf2.readLine()) != null)
@@ -304,4 +302,6 @@ public class MainActivity extends AppCompatActivity {
 //            imagestr[i]=len[i].getAbsolutePath();
 //        }
 //    }
+
+.
 
