@@ -1,9 +1,14 @@
 package com.teclever.test.slidingfragment;
 
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +33,12 @@ import java.io.RandomAccessFile;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE";
+    public static final String CAMERA = "android.permission.CAMERA";
+    public static final String BLUETOOTH = "android.permission.BLUETOOTH";
+    public static final String READ_PHONE_STATE = "android.permission.READ_PHONE_STATE";
+    private static final int PERMISSION_REQUEST_CODE = 200;
+
    GridView gridview;
    GridViewAdapter adapter;
     Integer[] imageId=null;
@@ -41,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         gridview=(GridView)findViewById(R.id.gridview);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            requestPermission();
 
 
         File file=new File(Environment.getExternalStorageDirectory()+File.separator+"images");
@@ -279,6 +292,71 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE, BLUETOOTH, READ_PHONE_STATE}, PERMISSION_REQUEST_CODE);
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0) {
+
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean storage = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    boolean blutooth = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+                    boolean telecom = grantResults[3] == PackageManager.PERMISSION_GRANTED;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(CAMERA) || shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)
+                                || shouldShowRequestPermissionRationale(BLUETOOTH)
+                                || shouldShowRequestPermissionRationale(READ_PHONE_STATE)) {
+
+                            showDailogForUser("You need to allow access to all the permissions");
+
+                            return;
+                        }
+                    } else {
+                        boolean permissionsGiven = true;
+                    }
+                }
+
+                break;
+        }
+    }
+
+    private void showDailogForUser(String s) {
+
+        final AlertDialog.Builder myDialog = new AlertDialog.Builder(
+                MainActivity.this);
+        myDialog.setTitle("Alert");
+        myDialog.setMessage("msg");
+        myDialog.setCancelable(false);
+        myDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE},
+                            PERMISSION_REQUEST_CODE);
+                }
+
+            }
+        });
+        myDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+
+                finish();
+
+            }
+        });
+
+        myDialog.show();
+
+    }
+
+
 
 
 //        String[] URL1={"https://s-media-cache-ak0.pinimg.com/564x/61/60/2c/61602c3c36502bf78bbf6dc2dc0b5f20.jpg"
@@ -303,5 +381,5 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-.
+
 
