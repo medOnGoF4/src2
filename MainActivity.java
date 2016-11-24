@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.GridLayoutAnimationController;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -282,6 +283,11 @@ public class MainActivity extends AppCompatActivity {
                 Animation anim = AnimationUtils.loadAnimation(getApplication(), R.anim.slideup);
 
                 gridview.startAnimation(anim);
+                GridLayoutAnimationController controller = new GridLayoutAnimationController(anim,0.1f,1.0f);
+                gridview.setLayoutAnimation(controller);
+                controller.start();
+                controller.setRowDelay(1.0f);
+
 
             }
 
